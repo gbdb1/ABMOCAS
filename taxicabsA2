@@ -58,15 +58,15 @@ prob-com-res-pm
 prob-res-cbd-pm
 prob-res-com-pm
 prob-res-res-pm
-prob-cbd-cbd-ev
-prob-cbd-com-ev
-prob-cbd-res-ev
-prob-com-cbd-ev
-prob-com-com-ev
-prob-com-res-ev
-prob-res-cbd-ev
-prob-res-com-ev
-prob-res-res-ev
+prob-cbd-cbd-eve
+prob-cbd-com-eve
+prob-cbd-res-eve
+prob-com-cbd-eve
+prob-com-com-eve
+prob-com-res-eve
+prob-res-cbd-eve
+prob-res-com-eve
+prob-res-res-eve
 prob-cbd-cbd-em
 prob-cbd-com-em
 prob-cbd-res-em
@@ -212,15 +212,15 @@ set	prob-res-cbd-pm		0.25
 set	prob-res-com-pm		0.25
 set	prob-res-res-pm		1
 ; evening			
-set	prob-cbd-cbd-ev		0.1
-set	prob-cbd-com-ev		0.1
-set	prob-cbd-res-ev		0.2
-set	prob-com-cbd-ev		0.1
-set	prob-com-com-ev		0.1
-set	prob-com-res-ev		0.4
-set	prob-res-cbd-ev		0.2
-set	prob-res-com-ev		0.4
-set	prob-res-res-ev		0.1
+set	prob-cbd-cbd-eve		0.1
+set	prob-cbd-com-eve		0.1
+set	prob-cbd-res-eve		0.2
+set	prob-com-cbd-eve		0.1
+set	prob-com-com-eve		0.1
+set	prob-com-res-eve		0.4
+set	prob-res-cbd-eve		0.2
+set	prob-res-com-eve		0.4
+set	prob-res-res-eve		0.1
 ; early morning			
 set	prob-cbd-cbd-em		0.05
 set	prob-cbd-com-em		0.05
@@ -264,15 +264,15 @@ set	prob-res-cbd-pm		0.2
 set	prob-res-com-pm		0.2
 set	prob-res-res-pm		0.2
 ; evening			
-set	prob-cbd-cbd-ev		0.1
-set	prob-cbd-com-ev		0.1
-set	prob-cbd-res-ev		0.1
-set	prob-com-cbd-ev		0.1
-set	prob-com-com-ev		0.1
-set	prob-com-res-ev		0.1
-set	prob-res-cbd-ev		0.1
-set	prob-res-com-ev		0.1
-set	prob-res-res-ev		0.1
+set	prob-cbd-cbd-eve		0.1
+set	prob-cbd-com-eve		0.1
+set	prob-cbd-res-eve		0.1
+set	prob-com-cbd-eve		0.1
+set	prob-com-com-eve		0.1
+set	prob-com-res-eve		0.1
+set	prob-res-cbd-eve		0.1
+set	prob-res-com-eve		0.1
+set	prob-res-res-eve		0.1
 ; early morning			
 set	prob-cbd-cbd-em		0.1
 set	prob-cbd-com-em		0.1
@@ -317,15 +317,15 @@ set	prob-res-cbd-pm		0.2
 set	prob-res-com-pm		0.2
 set	prob-res-res-pm		0.2
 ; evening			
-set	prob-cbd-cbd-ev		0.1
-set	prob-cbd-com-ev		0.1
-set	prob-cbd-res-ev		0.1
-set	prob-com-cbd-ev		0.1
-set	prob-com-com-ev		0.1
-set	prob-com-res-ev		0.1
-set	prob-res-cbd-ev		0.1
-set	prob-res-com-ev		0.1
-set	prob-res-res-ev		0.1
+set	prob-cbd-cbd-eve		0.1
+set	prob-cbd-com-eve		0.1
+set	prob-cbd-res-eve		0.1
+set	prob-com-cbd-eve		0.1
+set	prob-com-com-eve		0.1
+set	prob-com-res-eve		0.1
+set	prob-res-cbd-eve		0.1
+set	prob-res-com-eve		0.1
+set	prob-res-res-eve		0.1
 ; early morning			
 set	prob-cbd-cbd-em		0.1
 set	prob-cbd-com-em		0.1
@@ -369,15 +369,15 @@ set prob-res-cbd-pm 1   ; Residential to CBD
 set prob-res-com-pm 1   ; Residential to Commercial
 set prob-res-res-pm 1   ; Residential to Residential (within Residential)
 ; midday
-set prob-cbd-cbd-ev 1   ; CBD to CBD (within CBD)
-set prob-cbd-com-ev 1   ; CBD to Commercial
-set prob-cbd-res-ev 1   ; CBD to Residential
-set prob-com-cbd-ev 1   ; Commercial to CBD
-set prob-com-com-ev 1   ; Commercial to Commercial (within Commercial)
-set prob-com-res-ev 1   ; Commercial to Residential
-set prob-res-cbd-ev 1   ; Residential to CBD
-set prob-res-com-ev 1   ; Residential to Commercial
-set prob-res-res-ev 1   ; Residential to Residential (within Residential)
+set prob-cbd-cbd-eve 1   ; CBD to CBD (within CBD)
+set prob-cbd-com-eve 1   ; CBD to Commercial
+set prob-cbd-res-eve 1   ; CBD to Residential
+set prob-com-cbd-eve 1   ; Commercial to CBD
+set prob-com-com-eve 1   ; Commercial to Commercial (within Commercial)
+set prob-com-res-eve 1   ; Commercial to Residential
+set prob-res-cbd-eve 1   ; Residential to CBD
+set prob-res-com-eve 1   ; Residential to Commercial
+set prob-res-res-eve 1   ; Residential to Residential (within Residential)
 ; early morning
 set prob-cbd-cbd-em 1   ; CBD to CBD (within CBD)
 set prob-cbd-com-em 1   ; CBD to Commercial
@@ -421,15 +421,15 @@ set	prob-res-cbd-pm		0
 set	prob-res-com-pm		0
 set	prob-res-res-pm		0
 ; midday			
-set	prob-cbd-cbd-ev		0
-set	prob-cbd-com-ev		0
-set	prob-cbd-res-ev		0
-set	prob-com-cbd-ev		0
-set	prob-com-com-ev		0
-set	prob-com-res-ev		0
-set	prob-res-cbd-ev		0
-set	prob-res-com-ev		0
-set	prob-res-res-ev		0
+set	prob-cbd-cbd-eve		0
+set	prob-cbd-com-eve		0
+set	prob-cbd-res-eve		0
+set	prob-com-cbd-eve		0
+set	prob-com-com-eve		0
+set	prob-com-res-eve		0
+set	prob-res-cbd-eve		0
+set	prob-res-com-eve		0
+set	prob-res-res-eve		0
 ; early morning			
 set	prob-cbd-cbd-em		0
 set	prob-cbd-com-em		0

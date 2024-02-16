@@ -285,7 +285,7 @@ set	prob-res-com-em		0.1
 set	prob-res-res-em		0.1
 
     ][
-      ifelse type-of-passenger-spawns = "holliday"[
+      ifelse type-of-passenger-spawns = "holiday"[
 ; AM Peak 			
 set	prob-cbd-cbd-am		0.2
 set	prob-cbd-com-am		0.2

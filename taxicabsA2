@@ -105,6 +105,8 @@ taxicabs-own [
   ; income variables
   num-total-trips
   total-income
+  total-loss
+  real-total-income
   current-trip-income
   trip-income-lst
   ; time when the passenger is picked
@@ -755,6 +757,8 @@ to setup-taxicabs
     set num-dead-miles 0
     set num-grids-traveled-current-trip 0
     set total-income 0
+    set total-loss 0
+    set real-total-income 0
     set current-trip-income 0
     set trip-distance-lst []
     set trip-income-lst []
@@ -1034,6 +1038,9 @@ end
 to taxicabs-movement
   ask taxicabs[
     pickup-passengers;the taxi is always trying to pickup passengers
+    set total-loss total-loss - gas-cost-per-patch
+    set real-total-income total-income + total-loss
+
     ifelse vacancy? [
       taxicab-move-random
     ][

@@ -1,0 +1,1070 @@
+globals[
+  ; phase counter
+  all-phases
+  all-phases-abbr
+  current-phase
+  current-phase-abbr
+  phase-counter
+  ; patch indices for building the city grid
+  road-patch-all-index
+  road-patch-right-index
+  road-patch-left-index
+  road-patch-up-index
+  road-patch-down-index
+  traffic-light-patch-index
+
+  ; patch agentsets for building the city grids
+  intersections            ; agentset containing the patches that are intersections
+  roads                    ; agentset containing the patches that are roads
+  streets                  ; agentset containing the patches that are roads excluding intersections
+  traffic-lights           ; agentset containing the patches that are traffic lights
+  row-traffic-lights       ; agentset containing the patches that are traffic lights on horizontal roads
+  col-traffic-lights       ; agentset containing the patches that are traffic lights on vertical roads
+
+  ; patch agentsets for districts and zones of a city
+  cbd-zones
+  commercial-zones
+  residential-zones
+
+  ; phase of the traffic:
+  row-green?
+  col-green?
+]
+
+breed [ taxicabs taxicab ]
+breed [ passengers passenger ]
+
+passengers-own [
+  patience-to-wait
+  been-waiting
+  destination-patch-passenger
+  d-xcor
+  d-ycor
+  num-passengers-waiting
+]
+
+taxicabs-own [
+  ; vacancy flag
+  vacancy?
+  ; intersection flag
+  prev-intersection
+  num-passengers-onboard
+  ; travel variables
+  num-total-miles
+  num-business-miles
+  num-dead-miles
+  num-grids-traveled-current-trip
+  trip-distance-lst
+  ; income variables
+  num-total-trips
+  total-income
+  current-trip-income
+  trip-income-lst
+  ; time when the passenger is picked
+  tick-at-pickup
+  current-trip-duration
+  trip-duration-lst
+  ; location information about pickup road
+  pickup-on-horizontal?
+  pickup-on-vertical? ; destination coordinates
+  d-xcor
+  d-xcor2
+  d-ycor
+  d-ycor2 ; pickup coordinates
+  pickup-xcor
+  pickup-ycor
+]
+
+patches-own[
+  ; patch identity check
+  is-road?
+  is-intersection?
+  is-traffic-light?
+  ; controlling the direction of the traffic for each patch
+  left?
+  right?
+  up?
+  down?
+  num-directions-possible
+  ; traffic rules
+  green-light-up?
+  ; district and zone characteristics
+  is-cbd?
+  is-residential?
+  is-commercial?
+]
+
+; The current grid size is 65x65
+; To create a grid system, for any given row and column,
+; there are 9 blocks with each spans for 5 patches separate by roads which spans 2 patches
+to setup
+  clear-all
+  random-seed 7
+  setup-globals
+  setup-patches
+  draw-road-lines
+  setup-road-direction
+  setup-taxicabs
+  reset-ticks
+end
+
+to go
+  start-traffic-light
+  report-current-phase
+  taxi-demand-at-patch
+  passengers-wait-for-ride
+  taxicabs-movement
+  tick
+end
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;; Setup all patches ;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+to setup-patches
+  build-zones
+  build-roads
+  build-intersections
+  build-traffic-lights
+end
+
+;;;;;;;;;;;;;;;;;;;;;;;
+;; Build Urban Zones ;;
+;;;;;;;;;;;;;;;;;;;;;;;
+to build-zones
+  ; residential zones
+  set residential-zones patches with [
+    (pycor < -25 or pycor > 25) or (pxcor < -25 or pxcor > 25)
+  ]
+  ask residential-zones[
+    set is-residential? true
+    set is-cbd? false
+    set is-commercial? false
+  ]
+  ; cbd zones: center
+  set cbd-zones patches with [
+    pxcor > -12 and pxcor < 12 and
+    pycor > -12 and pycor < 12
+  ]
+  ask cbd-zones [
+    set is-cbd? true
+    set is-residential? false
+    set is-commercial? false
+    set pcolor [255 188 121]
+  ]
+  ; commercial zones
+  set commercial-zones patches with [
+    pxcor > -26 and pxcor < 26 and
+    pycor > -26 and pycor < 26
+  ]
+  set commercial-zones commercial-zones with [not member? self cbd-zones]
+  ask commercial-zones [
+    set is-residential? false
+    set is-cbd? false
+    set is-commercial? true
+    set pcolor [162 200 236] ;; blue
+  ]
+end
+
+; Helper that takes a list as input
+; 1. turn all elements in a list negative
+; 2. concatenate both negative and positive lists
+to-report create-full-list [lst]
+  ;; convert the input list all to negative
+  let neg-lst map [i -> i * -1] lst
+  ;; concatenate the negative lst with the original pos list
+  let full-lst sentence neg-lst lst
+  report full-lst
+end
+
+to setup-globals
+  ; define the color of the neighborhoods
+  ask patches [
+    set pcolor [207 207 207] ;; cherry red
+
+    ; patch identity
+    set is-road? false
+    set is-intersection? false
+    set is-traffic-light? false
+
+    ; patch direction
+    set left? false
+    set right? false
+    set up? false
+    set down? false
+    set num-directions-possible 0
+    ;; set phase for the traffic light
+    set row-green? true
+    set col-green? false
+  ]
+
+  ; Identify roads with positive road index number
+  let road-patch-pos [3 4 10 11 17 18 24 25 31 32]
+
+  ; Use create-full-list procedure to get all road patch index
+  set road-patch-all-index create-full-list (road-patch-pos)
+
+  ; Identify roads that can only go right
+  let road-patch-right-pos [3 10 17 24 31]
+  let road-patch-right-neg map[i -> (i + 1) * -1] road-patch-right-pos
+  set road-patch-right-index sentence road-patch-right-pos road-patch-right-neg
+
+  ; Identify roads that can only go left
+  let road-patch-left-pos [4 11 18 25 32]
+  let road-patch-left-neg map[i -> (i - 1) * -1] road-patch-left-pos
+  set road-patch-left-index sentence road-patch-left-pos road-patch-left-neg
+
+  ; Identify roads that can only go top
+  set road-patch-up-index road-patch-left-index;
+
+  ; Identify roads that can only go bottom
+  set road-patch-down-index road-patch-right-index;
+
+  ; set up all phases
+  set all-phases ["AM Peak" "Midday" "PM Peak" "Evening" "Early Morning"]
+  set current-phase first all-phases
+  set all-phases-abbr["AM" "MD" "PM" "EVE" "EM"]
+  set current-phase-abbr first all-phases-abbr
+
+  set phase-counter 1
+end
+
+;;;;;;;;;;;;;;;;;
+;; Build roads ;;
+;;;;;;;;;;;;;;;;;
+to build-roads
+  set roads patches with [
+    member? pycor road-patch-all-index or
+    member? pxcor road-patch-all-index
+  ]
+  ask roads [
+    set is-road? true
+    set pcolor black
+  ]
+end
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Build intersections ;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+to build-intersections
+  set intersections roads with [
+    member? pycor road-patch-all-index and
+    member? pxcor road-patch-all-index
+  ]
+  ask intersections [
+    set is-intersection? true
+    set is-road? true
+    set pcolor black
+  ]
+  ; build streets which separate intersection and roads
+  set streets roads with [not member? self intersections]
+end
+
+;;;;;;;;;;;;;;;;;;;;;;;
+;;; Draw road lines ;;;
+;;;;;;;;;;;;;;;;;;;;;;;
+to draw-horizontal-line [ y gap ]
+  ; We use a temporary turtle to draw the line:
+  ; - with a gap of zero, we get a continuous line;
+  ; - with a gap greater than zero, we get a dashed line.
+  create-turtles 1 [
+    setxy (min-pxcor - 0.5 ) y
+    hide-turtle
+    set color white
+    set heading 90
+    repeat world-width - 0.5 [
+      pen-up
+      forward gap
+      pen-down
+      forward (1 - gap)
+    ]
+    die
+  ]
+end
+
+to draw-vertical-line [ x gap ]
+  ; We use a temporary turtle to draw the line:
+  ;   with a gap of zero, we get a continuous line;
+  ;   with a gap greater than zero, we get a dashed line.
+  create-turtles 1 [
+    setxy x (min-pxcor - 0.5 )
+    hide-turtle
+    set color white
+    set heading 180
+    repeat world-width - 0.5 [
+      pen-up
+      forward gap
+      pen-down
+      forward (1 - gap)
+    ]
+    die
+  ]
+end
+
+to draw-road-lines
+  foreach road-patch-all-index [y-coordinate ->
+    draw-horizontal-line y-coordinate 0.5
+  ]
+  foreach road-patch-all-index [x-coordinate ->
+    draw-vertical-line x-coordinate 0.5
+  ]
+end
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Build traffic lights ;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+to build-traffic-lights
+  ; Identify patches that are traffic lights with positive index
+  let traffic-light-patch-index-pos [2 5 9 12 16 19 23 26 30]
+  ; Use create-full-list procedure to get all road patch index
+  set traffic-light-patch-index create-full-list (traffic-light-patch-index-pos)
+
+  ; Create an agent set called traffic lights
+  set traffic-lights roads with [
+    member? pxcor traffic-light-patch-index or
+    member? pycor traffic-light-patch-index
+  ]
+  ; Create an agent set called row traffic lights
+  set row-traffic-lights traffic-lights with [
+    member? pycor traffic-light-patch-index
+  ]
+  ; Create an agent set called col traffic lights
+  set col-traffic-lights traffic-lights with [
+    member? pxcor traffic-light-patch-index
+  ]
+
+  ; Set traffic light flag
+  ask traffic-lights [
+    set is-traffic-light? true
+  ]
+
+  ; define row and column traffic lights
+  set row-traffic-lights traffic-lights with [
+    member? pxcor traffic-light-patch-index
+  ]
+  set col-traffic-lights traffic-lights with [
+    member? pycor traffic-light-patch-index
+  ]
+  ask row-traffic-lights [
+    set pcolor green
+  ]
+  ask col-traffic-lights [
+    set pcolor red
+  ]
+  ask traffic-lights[
+    if pcolor = green [
+      set green-light-up? true
+    ]
+    if pcolor = red [
+      set green-light-up? false
+    ]
+  ]
+end
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; Draw road direction ;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+to setup-road-direction
+  ; first set all roads with dummy direction to false
+  ask roads [
+    set right? false
+    set left? false
+    set up? false
+    set down? false
+  ]
+
+  ; change roads direction dummy according to road patch index
+  ask roads[
+    if member? pycor road-patch-right-index[set right? true]
+    if member? pycor road-patch-left-index[set left? true]
+    if member? pxcor road-patch-up-index[set up? true]
+    if member? pxcor road-patch-down-index[set down? true ]
+  ]
+
+  ; Adjust corner cases
+  ; if a driver at the most top roads cannot go further top
+  ask roads with [pycor = 32] [set up? false]
+  ; if a driver at the most bottom roads cannot go further bottom
+  ask roads with [pycor = -32] [set down? false]
+  ; if a driver at the most right roads cannot go further right
+  ask roads with [pxcor = 32][set right? false]
+  ; if a driver at the most left roads cannot go left
+  ask roads with [pxcor = -32][set left? false]
+
+  ; fix some corner cases
+  ; left upper corner
+  ask patch -31 32 [
+    set up? false
+    set left? true
+  ]
+
+  ; left lower corner
+  ask patch -32 -31 [
+    set left? false
+    set down? true
+  ]
+  ask patch 32 31 [
+    set right? false
+    set up? true
+  ]
+
+  ; right lower corner
+  ask patch 31 -32 [
+    set down? false
+    set right? true
+  ]
+
+  ; count the number of directions possible for each road patches
+  ask patches [
+    if up? [set num-directions-possible num-directions-possible + 1]
+    if down? [set num-directions-possible num-directions-possible + 1]
+    if right? [set num-directions-possible num-directions-possible + 1]
+    if left? [set num-directions-possible num-directions-possible + 1]
+  ]
+end
+
+;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; Create Taxicabs ;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;
+to setup-taxicabs
+  create-taxicabs num-taxicab [
+    set color yellow
+    set size 2
+    set vacancy? true
+    set num-passengers-onboard 0
+    set num-total-trips 0
+    set num-total-miles 0
+    set num-business-miles 0
+    set num-dead-miles 0
+    set num-grids-traveled-current-trip 0
+    set total-income 0
+    set current-trip-income 0
+    set trip-distance-lst []
+    set trip-income-lst []
+    set trip-duration-lst []
+  ]
+  ; put those cabs on the road
+  ; 0 up; 90 right; 180 down; 270 left
+  ask taxicabs[ move-to one-of roads with [not any? taxicabs-on self] ]
+  fix-taxicab-direction
+end
+
+to fix-taxicab-direction
+  ask roads [
+    ; multi-direction patches
+    if up? and not down? and not left? and right? [
+      ask taxicabs-here [
+        ifelse random 100 > 50 [set heading 0][set heading 90]
+      ]
+    ]
+    if up? and not down? and left? and not right? [
+      ask taxicabs-here [
+        ifelse random 100 > 50 [set heading 0][set heading 270]
+      ]
+    ]
+    if not up? and down? and not left? and right? [
+      ask taxicabs-here [
+        ifelse random 100 > 50 [set heading 180][set heading 90]
+      ]
+    ]
+    if not up? and down? and left? and not right? [
+      ask taxicabs-here [ifelse random 100 > 50 [set heading 180][set heading 270]
+      ]
+    ]
+    ; single direction patches
+    if up? and not down? and not left? and not right? [ask taxicabs-here [set heading 0]]
+    if not up? and down? and not left? and not right? [ask taxicabs-here [set heading 180]]
+    if not up? and not down? and left? and not right? [ask taxicabs-here [set heading 270]]
+    if not up? and not down? and not left? and right? [ask taxicabs-here [set heading 90]]]
+end
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Update traffic lights ;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+to update-traffic-light
+  ask row-traffic-lights [
+    ifelse pcolor = green [set row-green? true][set row-green? false]
+  ]
+
+  ask col-traffic-lights [
+    ifelse pcolor = green [set col-green? true][set col-green? false]
+  ]
+end
+
+to switch-traffic-light
+  ifelse row-green? [
+    set row-green? false
+    set col-green? true
+  ][
+    set row-green? true
+    set col-green? false
+  ]
+end
+
+to change-traffic-light-color
+  if row-green? [
+    ask row-traffic-lights [
+    set pcolor green]
+
+    ask col-traffic-lights [
+      set pcolor red]
+  ]
+  if col-green? [
+    ask row-traffic-lights[
+      set pcolor red]
+
+    ask col-traffic-lights [
+      set pcolor green]
+  ]
+end
+
+to start-traffic-light
+  update-traffic-light
+  change-traffic-light-color
+  if ticks mod length-of-green-light = 0 [
+    switch-traffic-light
+    change-traffic-light-color
+  ]
+
+  ; update patch variable of traffic lights of its color
+  ask traffic-lights [
+   ifelse pcolor = green [
+      set green-light-up? true
+    ][
+      set green-light-up? false
+    ]
+  ]
+end
+
+;;;;;;;;;;;;;;;;;;;;;;
+;;;; Global Clock ;;;;
+;;;;;;;;;;;;;;;;;;;;;;
+to report-current-phase
+  ; there are a total of 5 time phases of a day
+  ; so in case of the counter is exceeding 4
+  ; set the counter back to 0
+  if phase-counter > 4 [
+      set phase-counter 0
+    ]
+  ; initial setting first phase is "AM Peak" and the counter is set to be 1
+  ; so this will let the first phase go through the whole time period without
+  ; jumping to the second phase at the very beginning
+  if ticks >= length-of-time-period and ticks mod length-of-time-period = 0 [
+    set current-phase item phase-counter all-phases
+    set current-phase-abbr item phase-counter all-phases-abbr
+    set phase-counter phase-counter + 1
+  ]
+end
+
+;;;;;;;;;;;;;;;;;;;;;
+;;;; Taxi pickup ;;;;
+;;;;;;;;;;;;;;;;;;;;;
+; Passengers wait for ride at a specific location
+; If the wait time exceed the patience
+; Passenger die
+to passengers-wait-for-ride
+  ask passengers [
+    set been-waiting been-waiting + 1
+    if been-waiting >= patience-to-wait [ die ]
+  ]
+end
+
+to generate-demand [some-prob origin destination]
+  if random-float 1 < some-prob [
+    ask n-of 1 origin [
+      sprout-passengers 1 [
+        set color 9.9
+        set shape "person"
+        set patience-to-wait random-normal wait-time-mean wait-time-sd
+        set been-waiting 0
+        set destination-patch-passenger one-of destination
+        set d-xcor [pxcor] of destination-patch-passenger
+        set d-ycor [pycor] of destination-patch-passenger
+        set num-passengers-waiting random 4 + 1
+      ]
+    ]
+  ]
+end
+
+to generate-demand-phase [phase-abbreviate]
+  let cbd-roads-pickup roads with [is-cbd? and not is-intersection?]
+  let commercial-roads-pickup roads with [is-commercial? and not is-intersection?]
+  let residential-roads-pickup roads with [is-residential? and not is-intersection?]
+  let cbd-roads-dropoff roads with [is-cbd? and not is-intersection? and not is-traffic-light?]
+  let commercial-roads-dropoff roads with [
+    is-commercial? and
+    not is-intersection? and
+    not is-traffic-light?
+  ]
+  let residential-roads-dropoff roads with [
+    is-residential? and
+    not is-intersection? and
+    not is-traffic-light?
+  ]
+
+  ; cbd -> commercial
+  generate-demand (runresult word "prob-cbd-cbd-" phase-abbreviate) (cbd-roads-pickup) (cbd-roads-dropoff)
+  ; cbd -> residential
+  generate-demand (runresult word "prob-cbd-com-" phase-abbreviate) (cbd-roads-pickup) (commercial-roads-dropoff)
+  ; cbd -> cbd
+  generate-demand (runresult word "prob-cbd-res-" phase-abbreviate) (cbd-roads-pickup) (residential-roads-dropoff)
+
+  ; commercial -> cbd
+  generate-demand (runresult word "prob-com-com-" phase-abbreviate) (commercial-roads-pickup) (commercial-roads-dropoff)
+  ; commercial -> residential
+  generate-demand (runresult word "prob-com-cbd-" phase-abbreviate) (commercial-roads-pickup) (cbd-roads-dropoff)
+  ; commercial -> commercial
+  generate-demand (runresult word "prob-com-res-" phase-abbreviate) (commercial-roads-pickup) (residential-roads-dropoff)
+
+  ; residential -> cbd
+  generate-demand (runresult word "prob-res-res-" phase-abbreviate) (residential-roads-pickup) (residential-roads-dropoff)
+  ; residential -> commercial
+  generate-demand (runresult word "prob-res-cbd-" phase-abbreviate) (residential-roads-pickup) (cbd-roads-dropoff)
+  ; residential -> residential
+  generate-demand (runresult word "prob-res-com-" phase-abbreviate) (residential-roads-pickup) (commercial-roads-dropoff)
+end
+
+to taxi-demand-at-patch
+  generate-demand-phase current-phase-abbr
+end
+
+;;;;;;;;;;;;;;;;;;;;
+;;;;Taxi Movement;;;
+;;;;;;;;;;;;;;;;;;;;
+to move-up
+  set heading 0
+  stop-for-red-else-go
+end
+
+to move-down
+  set heading 180
+  stop-for-red-else-go
+end
+
+to move-right
+  set heading 90
+  stop-for-red-else-go
+end
+
+to move-left
+  set heading 270
+  stop-for-red-else-go
+end
+
+to move-straight
+  let cur-heading [heading] of self
+  (ifelse
+    cur-heading = 0 [move-up]
+    cur-heading = 90 [move-right]
+    cur-heading = 180 [move-down]
+    cur-heading = 270 [move-left]
+  )
+end
+
+; Traffic rule good citizens: stop at the red light
+to stop-for-red-else-go
+  ifelse (
+    ; stop-condition: taxicab is at a traffic light patch and red light is up and patch ahead is an intersection
+    is-traffic-light? and not green-light-up? and ([is-intersection?] of patch-ahead 1)
+  ) [
+    stop
+  ][
+    ; in case there is another taxicabs waiting for red light ahead, stop behind
+    if (not any? taxicabs-on patch-ahead 1) [
+      fd 1
+      update-delivery-and-income
+    ]
+  ]
+end
+
+to make-u-turn
+  ; taxicab current spatial direction and location
+  let heading-up? [heading] of self = 0
+  let heading-right? [heading] of self = 90
+  let heading-down? [heading] of self = 180
+  let heading-left? [heading] of self = 270
+
+  if heading-up? [
+    set heading 270
+    fd 1
+    update-delivery-and-income
+    set heading 180
+  ]
+  if heading-down? [
+    set heading 90
+    fd 1
+    update-delivery-and-income
+    set heading 0
+  ]
+  if heading-right? [
+    set heading 0
+    fd 1
+    update-delivery-and-income
+    set heading 270
+  ]
+  if heading-left? [
+    set heading 180
+    fd 1
+    update-delivery-and-income
+    set heading 90
+  ]
+end
+
+to taxicabs-movement
+  ask taxicabs[
+    pickup-passengers
+    ifelse vacancy? [
+      taxicab-move-random
+    ][
+      taxicab-move-deliver
+    ]
+  ]
+end
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; Pickup Passengers ;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; procedure that instruct taxicabs to pickup passengers
+to pickup-passengers
+  ; setting or passing along trip-related variables
+  if vacancy? [
+    ifelse any? passengers-here[
+      ; identify a passenger to pickup
+      let target-passenger one-of passengers-here
+      ; pick up passengers and taxicab is no longer vacant
+      set vacancy? false
+      ; color taxicabs to indicate occupancy
+      set color 117
+      ; indicate number of passengers on board
+      set num-passengers-onboard [num-passengers-waiting] of target-passenger
+      ; tracking trip fare
+      set current-trip-income first-passenger-cost +
+        (num-passengers-onboard - 1) *
+        each-additional-passenger-cost
+      ; record ticks at the pickup moment
+      set tick-at-pickup ticks
+      ; record pickup coordinates
+      set pickup-xcor [xcor] of self
+      set pickup-ycor [ycor] of self
+      ; update total number of trips
+      set num-total-trips num-total-trips + 1
+      ; update destination coordinates
+      set d-xcor [d-xcor] of target-passenger
+      set d-ycor [d-ycor] of target-passenger
+      ; passengers onboard and died on roads
+      ask target-passenger [die]
+      ; indicate pickup road is horizontal or vertical
+      set pickup-on-horizontal? (left? or right?)
+      set pickup-on-vertical? (up? or down?)
+      ; update destination coordinates
+      update-destination-coordinates
+      highlight-destination-patches 117
+      change-direction-for-delivery
+    ][
+      hereweare
+  ]
+end
+
+to change-direction-for-delivery
+  ; Assess the destination coordinate with the current pickup coordinate
+  let current-xcor [xcor] of self
+  let current-ycor [ycor] of self
+
+  let destination-xcor1 [d-xcor] of self
+  let destination-xcor2 [d-xcor2] of self
+  let destination-ycor1 [d-ycor] of self
+  let destination-ycor2 [d-ycor2] of self
+
+  ; current location based on the destination location
+  let cur-at-top? (current-ycor > destination-ycor1) and (current-ycor > destination-ycor2)
+  let cur-at-bottom? (current-ycor < destination-ycor1) and (current-ycor < destination-ycor2)
+  let cur-on-right? (current-xcor > destination-xcor1) and (current-xcor > destination-xcor2)
+  let cur-on-left? (current-xcor < destination-xcor1) and (current-xcor < destination-xcor2)
+  let cur-same-x? (current-xcor = destination-xcor1) or (current-xcor =  destination-xcor2)
+  let cur-same-y? (current-ycor = destination-ycor1) or (current-ycor = destination-ycor2)
+
+  ; taxicab current spatial direction and location
+  let heading-up? [heading] of self = 0
+  let heading-right? [heading] of self = 90
+  let heading-down? [heading] of self = 180
+  let heading-left? [heading] of self = 270
+
+  ; fix taxicab heading
+  ; The current location is on top-right of destination
+  (ifelse
+  ; The current location is straight above
+    cur-same-x? and cur-at-top? [
+      if heading-up? [make-u-turn]
+    ]
+  ; The current location is straight below
+    cur-same-x? and cur-at-bottom? [
+      if heading-down? [make-u-turn]
+    ]
+  ; The current location is straight right
+    cur-same-y? and cur-on-right? [
+      if heading-right? [make-u-turn]
+    ]
+  ; The current location is straight left
+    cur-same-y? and cur-on-left? [
+      if heading-left? [make-u-turn]
+    ]
+    cur-at-top? and cur-on-right? [
+      ; if the heading is not facing bottom or left, make a u-turn
+      if (heading-up? or heading-right?) [make-u-turn]
+    ]
+  ; The current location is on top left of destination
+    cur-at-top? and cur-on-left? [
+      ; if the heading is not facing down or right, make a u-turn
+      if (heading-up? or heading-left?) [make-u-turn]
+    ]
+  ; The current location is on bottom-right of destination
+    cur-at-bottom? and cur-on-right? [
+      ; if the heading is not facing up or left, make a u-turn
+      if (heading-down? or heading-right?) [make-u-turn]
+    ]
+  ; The current location is on botton-left of destination
+    cur-at-bottom? and cur-on-left? [
+      ; if the heading is not facing up or right, make a u-turn
+      if (heading-down? or heading-left?) [make-u-turn]
+    ]
+  )
+end
+
+; update the destination coordinates:
+; so that dropoff patches can be flexible and
+; road directions no longer matter
+to update-destination-coordinates
+  ; if destination patch has up or down sign
+  ; meaning destination is in column roads so x coordinate can be flexible
+  if [up? or down?] of patch d-xcor d-ycor [
+    let dropoff-x-cord-1 d-xcor + 1
+    let dropoff-x-cord-2 d-xcor - 1
+    ifelse member? dropoff-x-cord-1 road-patch-all-index [
+      set d-xcor2 dropoff-x-cord-1
+    ][
+      set d-xcor2 dropoff-x-cord-2
+    ]
+    set d-ycor2 d-ycor
+  ]
+  ; if destination patch has left or right sign
+  ; meaning destination is in row roads so y coordinate can be flexible
+  if [right? or left?] of patch d-xcor d-ycor [
+    let dropoff-y-cord-1 d-ycor + 1
+    let dropoff-y-cord-2 d-ycor - 1
+    ifelse member? dropoff-y-cord-1 road-patch-all-index [
+      set d-ycor2 dropoff-y-cord-1
+    ][
+      set d-ycor2 dropoff-y-cord-2
+    ]
+    set d-xcor2 d-xcor
+  ]
+end
+
+; highlight the destination patches
+to highlight-destination-patches [patch-color]
+  if d-ycor2 != 0 [
+    ask patch d-xcor d-ycor [set pcolor patch-color]
+    ask patch d-xcor d-ycor2 [set pcolor patch-color]
+  ]
+  if d-xcor2 != 0 [
+    ask patch d-xcor d-ycor [set pcolor patch-color]
+    ask patch d-xcor2 d-ycor [set pcolor patch-color]
+  ]
+end
+
+to update-delivery-and-income
+  set num-total-miles num-total-miles + 1
+  if vacancy? [set num-dead-miles num-dead-miles  + 1]
+  if not vacancy? [
+    set num-business-miles num-business-miles + 1
+    set num-grids-traveled-current-trip  num-grids-traveled-current-trip  + 1
+    set current-trip-income current-trip-income + each-grid-cost + each-tick-cost
+    set current-trip-duration ticks - tick-at-pickup
+  ]
+end
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; Passenger seeking ;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;
+to taxicab-move-random
+  ifelse num-directions-possible = 1 [
+    set prev-intersection 0
+    (ifelse right? [move-right]
+      left? [move-left]
+      up? [move-up]
+      down? [move-down])
+  ][
+    ; turtle behavior in the intersection
+    ; need to prevent taxicabs looping in the intersections
+    set prev-intersection prev-intersection + 1
+    ; this taxicab attribute tracks
+    ; how many ticks have turtle spent on an intersection
+    (ifelse
+      up? and right? [
+        ifelse prev-intersection = 2 [ move-right ][ifelse random 2 = 0 [ move-up ][ move-right ] ]
+      ]
+      up? and left? [
+        ifelse prev-intersection = 2 [ move-up ][ ifelse random 2 = 0 [move-up][move-left] ]
+      ]
+      down? and right? [
+        ifelse prev-intersection = 2 [ move-down ][ifelse random 2 = 0 [ move-down ][ move-right ] ]
+      ]
+      down? and left? [
+        ifelse prev-intersection = 2 [ move-left ] [ ifelse random 2 = 0 [ move-down ][ move-left ] ]
+      ]
+    )
+  ]
+end
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; Passenger Delivery ;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; to deliver passengers:
+; taxicabs will go with the shortest path in Manhattan distance
+to taxicab-move-deliver
+  ; current location coordinates
+  let current-xcor [xcor] of self
+  let current-ycor [ycor] of self
+
+  ; destination location coordintes
+  let destination-xcor1 [d-xcor] of self
+  let destination-xcor2 [d-xcor2] of self
+  let destination-ycor1 [d-ycor] of self
+  let destination-ycor2 [d-ycor2] of self
+
+  ; current location based on the destination location
+  let cur-at-top? (current-ycor > destination-ycor1) and (current-ycor > destination-ycor2)
+  let cur-at-bottom? (current-ycor < destination-ycor1) and (current-ycor < destination-ycor2)
+  let cur-same-y? (current-ycor = destination-ycor1) or (current-ycor = destination-ycor2)
+  let cur-on-right? (current-xcor > destination-xcor1) and (current-xcor > destination-xcor2)
+  let cur-on-left? (current-xcor < destination-xcor1) and (current-xcor < destination-xcor2)
+  let cur-same-x? (current-xcor = destination-xcor1) or (current-xcor =  destination-xcor2)
+
+  ; drop-off coordinate road type
+  let dropoff-on-vertical? (destination-ycor1 = destination-ycor2)
+  let dropoff-on-horizontal? (destination-xcor1 = destination-xcor2)
+
+  ; taxicab current spatial direction and location
+  let heading-up? [heading] of self = 0
+  let heading-right? [heading] of self = 90
+  let heading-down? [heading] of self = 180
+  let heading-left? [heading] of self = 270
+  let on-intersection? member? patch-here intersections
+
+  ; movement logic based on pickup dropoff road type
+  if (pickup-on-vertical? and dropoff-on-vertical?)[
+    (ifelse
+      cur-on-left? [
+        ifelse right? [ move-right ][ ifelse on-intersection? and heading-down? [ move-down ] [ move-straight ] ]
+      ]
+      cur-on-right? [
+        ifelse left? [ move-left ][ ifelse on-intersection? and heading-up? [ move-up ][ move-straight ] ]
+      ]
+      cur-same-x? [
+        (ifelse
+          cur-at-top? [
+            ifelse down? [ move-down ][ if heading-left? [ move-left ] ]
+          ]
+          cur-at-bottom? [
+            ifelse up? [ move-up ] [ if heading-right? [ move-right ] ]
+          ]
+        )
+      ]
+    )
+  ]
+
+  if (pickup-on-horizontal? and dropoff-on-horizontal?) [
+    (ifelse
+      cur-at-top? [
+        ifelse down? [move-down][move-straight]
+      ]
+      cur-at-bottom? [
+        ifelse up? [ move-up ][ move-straight ]
+      ]
+      cur-same-y? [
+        (ifelse
+          cur-on-right? [ifelse left? [ move-left ][ if heading-up? [ move-up ]]]
+          cur-on-left? [ifelse right? [ move-right ][ if heading-down? [ move-down ]]]
+        )
+      ]
+    )
+  ]
+
+  if (pickup-on-vertical? and dropoff-on-horizontal?)[
+    (ifelse
+      cur-at-top? [
+        ifelse down? [ move-down ][ move-straight ]
+      ]
+      cur-at-bottom? [
+        ifelse up? [ move-up ][ move-straight ]
+      ]
+      cur-same-y? [
+        (ifelse
+          cur-on-right? [ ifelse left?  [ move-left  ][ if heading-up? [ move-up ] ] ]
+          cur-on-left?  [ ifelse right? [ move-right ][ if heading-down? [ move-down ] ] ]
+        )
+      ]
+    )
+  ]
+  if (pickup-on-horizontal? and dropoff-on-vertical?)[
+    (ifelse
+      cur-on-right? [ ifelse left? [ move-left][ move-straight ] ]
+      cur-on-left? [ ifelse right? [ move-right][ move-straight ] ]
+      cur-same-x? [
+        (ifelse
+          cur-at-top? [ ifelse down? [ move-down] [if heading-left? [ move-left ] ] ]
+          cur-at-bottom? [ ifelse up? [ move-up ] [if heading-right? [ move-right ] ] ]
+        )
+      ]
+    )
+  ]
+
+  ; dropoff passenger if reached destination
+  dropoff-passenger
+end
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; Dropoff Passengers ;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+to dropoff-passenger
+  let current-xcor [xcor] of self
+  let current-ycor [ycor] of self
+
+  let destination-xcor1 [d-xcor] of self
+  let destination-xcor2 [d-xcor2] of self
+  let destination-ycor1 [d-ycor] of self
+  let destination-ycor2 [d-ycor2] of self
+
+  if (current-xcor = destination-xcor1 or current-xcor = destination-xcor2) and
+     (current-ycor = destination-ycor1 or current-ycor = destination-ycor2)[
+    ; update total income
+    set total-income total-income + current-trip-income
+    ; append current trip distance
+    set trip-distance-lst lput num-grids-traveled-current-trip trip-distance-lst
+    set trip-income-lst lput current-trip-income trip-income-lst
+    set trip-duration-lst lput current-trip-duration trip-duration-lst
+    ; reset taxicab
+    reset-taxicab-parameter-after-trip
+  ]
+end
+
+to reset-taxicab-parameter-after-trip
+  ; reset taxicab
+  set vacancy? true
+  set color yellow
+  set num-passengers-onboard 0
+  set num-grids-traveled-current-trip 0
+  set current-trip-income 0
+  set current-trip-duration 0
+  highlight-destination-patches black
+  set d-xcor 0
+  set d-xcor2 0
+  set d-ycor 0
+  set d-ycor2 0
+  set pickup-on-horizontal? 0
+  set pickup-on-vertical? 0
+end
+
+
+; Copyright 2019 Uri Wilensky.
+; See Info tab for full copyright and license.

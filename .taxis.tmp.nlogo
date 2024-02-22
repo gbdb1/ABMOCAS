@@ -1802,7 +1802,7 @@ Defects:
 total cost = dead miles * gas cost per mile
 total profit = total income – total cost
 Defects:
-1. standing-still cars consume gasoline, in fact.
+1. s
 ## HOW IT WORKS
 
 The urban area is portrayed as a grid system, which is formed by two-lane roads and intersections. The metropolitan area consists of three regions: (1) Central Business District (in orange), (2) Commercial Zone (in blue), and (3) Residential Zone (in grey). The three regions can form nine origin-destination (OD) pairs, with six pairs of inter-regional flows and three pairs of intra-regional flows.

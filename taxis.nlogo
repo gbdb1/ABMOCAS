@@ -31,51 +31,51 @@ globals[
   col-green?
 
   ; spawnrate probabilities
-prob-cbd-cbd-am
-prob-cbd-com-am
-prob-cbd-res-am
-prob-com-cbd-am
-prob-com-com-am
-prob-com-res-am
-prob-res-cbd-am
-prob-res-com-am
-prob-res-res-am
-prob-cbd-cbd-md
-prob-cbd-com-md
-prob-cbd-res-md
-prob-com-cbd-md
-prob-com-com-md
-prob-com-res-md
-prob-res-cbd-md
-prob-res-com-md
-prob-res-res-md
-prob-cbd-cbd-pm
-prob-cbd-com-pm
-prob-cbd-res-pm
-prob-com-cbd-pm
-prob-com-com-pm
-prob-com-res-pm
-prob-res-cbd-pm
-prob-res-com-pm
-prob-res-res-pm
-prob-cbd-cbd-eve
-prob-cbd-com-eve
-prob-cbd-res-eve
-prob-com-cbd-eve
-prob-com-com-eve
-prob-com-res-eve
-prob-res-cbd-eve
-prob-res-com-eve
-prob-res-res-eve
-prob-cbd-cbd-em
-prob-cbd-com-em
-prob-cbd-res-em
-prob-com-cbd-em
-prob-com-com-em
-prob-com-res-em
-prob-res-cbd-em
-prob-res-com-em
-prob-res-res-em
+  prob-cbd-cbd-am
+  prob-cbd-com-am
+  prob-cbd-res-am
+  prob-com-cbd-am
+  prob-com-com-am
+  prob-com-res-am
+  prob-res-cbd-am
+  prob-res-com-am
+  prob-res-res-am
+  prob-cbd-cbd-md
+  prob-cbd-com-md
+  prob-cbd-res-md
+  prob-com-cbd-md
+  prob-com-com-md
+  prob-com-res-md
+  prob-res-cbd-md
+  prob-res-com-md
+  prob-res-res-md
+  prob-cbd-cbd-pm
+  prob-cbd-com-pm
+  prob-cbd-res-pm
+  prob-com-cbd-pm
+  prob-com-com-pm
+  prob-com-res-pm
+  prob-res-cbd-pm
+  prob-res-com-pm
+  prob-res-res-pm
+  prob-cbd-cbd-eve
+  prob-cbd-com-eve
+  prob-cbd-res-eve
+  prob-com-cbd-eve
+  prob-com-com-eve
+  prob-com-res-eve
+  prob-res-cbd-eve
+  prob-res-com-eve
+  prob-res-res-eve
+  prob-cbd-cbd-em
+  prob-cbd-com-em
+  prob-cbd-res-em
+  prob-com-cbd-em
+  prob-com-com-em
+  prob-com-res-em
+  prob-res-cbd-em
+  prob-res-com-em
+  prob-res-res-em
 ]
 
 breed [ taxicabs taxicab ]
@@ -181,265 +181,265 @@ to setup-patches
 end
 to setup-spawnrate
   ifelse type-of-passenger-spawns = "workday" [
-; AM Peak 			
-set	prob-cbd-cbd-am		0.1
-set	prob-cbd-com-am		0.1
-set	prob-cbd-res-am		0.1
-set	prob-com-cbd-am		0.1
-set	prob-com-com-am		0.1
-set	prob-com-res-am		0.1
-set	prob-res-cbd-am		1
-set	prob-res-com-am		1
-set	prob-res-res-am		1
-; Midday			
-set	prob-cbd-cbd-md		0.25
-set	prob-cbd-com-md		0.25
-set	prob-cbd-res-md		0.25
-set	prob-com-cbd-md		0.25
-set	prob-com-com-md		0.25
-set	prob-com-res-md		0.25
-set	prob-res-cbd-md		0.25
-set	prob-res-com-md		0.25
-set	prob-res-res-md		0.25
-; PM Peak			
-set	prob-cbd-cbd-pm		0.25
-set	prob-cbd-com-pm		0.25
-set	prob-cbd-res-pm		1
-set	prob-com-cbd-pm		0.25
-set	prob-com-com-pm		0.25
-set	prob-com-res-pm		1
-set	prob-res-cbd-pm		0.25
-set	prob-res-com-pm		0.25
-set	prob-res-res-pm		1
-; evening			
-set	prob-cbd-cbd-eve		0.1
-set	prob-cbd-com-eve		0.1
-set	prob-cbd-res-eve		0.2
-set	prob-com-cbd-eve		0.1
-set	prob-com-com-eve		0.1
-set	prob-com-res-eve		0.4
-set	prob-res-cbd-eve		0.2
-set	prob-res-com-eve		0.4
-set	prob-res-res-eve		0.1
-; early morning			
-set	prob-cbd-cbd-em		0.05
-set	prob-cbd-com-em		0.05
-set	prob-cbd-res-em		0.1
-set	prob-com-cbd-em		0.05
-set	prob-com-com-em		0.05
-set	prob-com-res-em		0.1
-set	prob-res-cbd-em		0.1
-set	prob-res-com-em		0.1
-set	prob-res-res-em		0.05
+    ; AM Peak 			
+    set	prob-cbd-cbd-am		0.1
+    set	prob-cbd-com-am		0.1
+    set	prob-cbd-res-am		0.1
+    set	prob-com-cbd-am		0.1
+    set	prob-com-com-am		0.1
+    set	prob-com-res-am		0.1
+    set	prob-res-cbd-am		1
+    set	prob-res-com-am		1
+    set	prob-res-res-am		1
+    ; Midday			
+    set	prob-cbd-cbd-md		0.25
+    set	prob-cbd-com-md		0.25
+    set	prob-cbd-res-md		0.25
+    set	prob-com-cbd-md		0.25
+    set	prob-com-com-md		0.25
+    set	prob-com-res-md		0.25
+    set	prob-res-cbd-md		0.25
+    set	prob-res-com-md		0.25
+    set	prob-res-res-md		0.25
+    ; PM Peak			
+    set	prob-cbd-cbd-pm		0.25
+    set	prob-cbd-com-pm		0.25
+    set	prob-cbd-res-pm		1
+    set	prob-com-cbd-pm		0.25
+    set	prob-com-com-pm		0.25
+    set	prob-com-res-pm		1
+    set	prob-res-cbd-pm		0.25
+    set	prob-res-com-pm		0.25
+    set	prob-res-res-pm		1
+    ; evening			
+    set	prob-cbd-cbd-eve		0.1
+    set	prob-cbd-com-eve		0.1
+    set	prob-cbd-res-eve		0.2
+    set	prob-com-cbd-eve		0.1
+    set	prob-com-com-eve		0.1
+    set	prob-com-res-eve		0.4
+    set	prob-res-cbd-eve		0.2
+    set	prob-res-com-eve		0.4
+    set	prob-res-res-eve		0.1
+    ; early morning			
+    set	prob-cbd-cbd-em		0.05
+    set	prob-cbd-com-em		0.05
+    set	prob-cbd-res-em		0.1
+    set	prob-com-cbd-em		0.05
+    set	prob-com-com-em		0.05
+    set	prob-com-res-em		0.1
+    set	prob-res-cbd-em		0.1
+    set	prob-res-com-em		0.1
+    set	prob-res-res-em		0.05
   ][
     ifelse type-of-passenger-spawns = "weekend" [
-; AM Peak 			
-set	prob-cbd-cbd-am		0.2
-set	prob-cbd-com-am		0.2
-set	prob-cbd-res-am		0.2
-set	prob-com-cbd-am		0.2
-set	prob-com-com-am		0.2
-set	prob-com-res-am		0.2
-set	prob-res-cbd-am		0.2
-set	prob-res-com-am		0.2
-set	prob-res-res-am		0.2
-; Midday			
-set	prob-cbd-cbd-md		0.2
-set	prob-cbd-com-md		0.2
-set	prob-cbd-res-md		0.2
-set	prob-com-cbd-md		0.2
-set	prob-com-com-md		0.2
-set	prob-com-res-md		0.2
-set	prob-res-cbd-md		0.2
-set	prob-res-com-md		0.2
-set	prob-res-res-md		0.2
-; PM Peak			
-set	prob-cbd-cbd-pm		0.2
-set	prob-cbd-com-pm		0.2
-set	prob-cbd-res-pm		0.2
-set	prob-com-cbd-pm		0.2
-set	prob-com-com-pm		0.2
-set	prob-com-res-pm		0.2
-set	prob-res-cbd-pm		0.2
-set	prob-res-com-pm		0.2
-set	prob-res-res-pm		0.2
-; evening			
-set	prob-cbd-cbd-eve		0.1
-set	prob-cbd-com-eve		0.1
-set	prob-cbd-res-eve		0.1
-set	prob-com-cbd-eve		0.1
-set	prob-com-com-eve		0.1
-set	prob-com-res-eve		0.1
-set	prob-res-cbd-eve		0.1
-set	prob-res-com-eve		0.1
-set	prob-res-res-eve		0.1
-; early morning			
-set	prob-cbd-cbd-em		0.1
-set	prob-cbd-com-em		0.1
-set	prob-cbd-res-em		0.1
-set	prob-com-cbd-em		0.1
-set	prob-com-com-em		0.1
-set	prob-com-res-em		0.1
-set	prob-res-cbd-em		0.1
-set	prob-res-com-em		0.1
-set	prob-res-res-em		0.1
+      ; AM Peak 			
+      set	prob-cbd-cbd-am		0.2
+      set	prob-cbd-com-am		0.2
+      set	prob-cbd-res-am		0.2
+      set	prob-com-cbd-am		0.2
+      set	prob-com-com-am		0.2
+      set	prob-com-res-am		0.2
+      set	prob-res-cbd-am		0.2
+      set	prob-res-com-am		0.2
+      set	prob-res-res-am		0.2
+      ; Midday			
+      set	prob-cbd-cbd-md		0.2
+      set	prob-cbd-com-md		0.2
+      set	prob-cbd-res-md		0.2
+      set	prob-com-cbd-md		0.2
+      set	prob-com-com-md		0.2
+      set	prob-com-res-md		0.2
+      set	prob-res-cbd-md		0.2
+      set	prob-res-com-md		0.2
+      set	prob-res-res-md		0.2
+      ; PM Peak			
+      set	prob-cbd-cbd-pm		0.2
+      set	prob-cbd-com-pm		0.2
+      set	prob-cbd-res-pm		0.2
+      set	prob-com-cbd-pm		0.2
+      set	prob-com-com-pm		0.2
+      set	prob-com-res-pm		0.2
+      set	prob-res-cbd-pm		0.2
+      set	prob-res-com-pm		0.2
+      set	prob-res-res-pm		0.2
+      ; evening			
+      set	prob-cbd-cbd-eve		0.1
+      set	prob-cbd-com-eve		0.1
+      set	prob-cbd-res-eve		0.1
+      set	prob-com-cbd-eve		0.1
+      set	prob-com-com-eve		0.1
+      set	prob-com-res-eve		0.1
+      set	prob-res-cbd-eve		0.1
+      set	prob-res-com-eve		0.1
+      set	prob-res-res-eve		0.1
+      ; early morning			
+      set	prob-cbd-cbd-em		0.1
+      set	prob-cbd-com-em		0.1
+      set	prob-cbd-res-em		0.1
+      set	prob-com-cbd-em		0.1
+      set	prob-com-com-em		0.1
+      set	prob-com-res-em		0.1
+      set	prob-res-cbd-em		0.1
+      set	prob-res-com-em		0.1
+      set	prob-res-res-em		0.1
 
     ][
       ifelse type-of-passenger-spawns = "holiday"[
-; AM Peak 			
-set	prob-cbd-cbd-am		0.2
-set	prob-cbd-com-am		0.2
-set	prob-cbd-res-am		0.2
-set	prob-com-cbd-am		0.2
-set	prob-com-com-am		0.2
-set	prob-com-res-am		0.2
-set	prob-res-cbd-am		0.2
-set	prob-res-com-am		0.2
-set	prob-res-res-am		0.2
-; Midday			
-set	prob-cbd-cbd-md		0.2
-set	prob-cbd-com-md		0.2
-set	prob-cbd-res-md		0.2
-set	prob-com-cbd-md		0.2
-set	prob-com-com-md		0.2
-set	prob-com-res-md		0.2
-set	prob-res-cbd-md		0.2
-set	prob-res-com-md		0.2
-set	prob-res-res-md		0.2
-; PM Peak			
-set	prob-cbd-cbd-pm		0.2
-set	prob-cbd-com-pm		0.2
-set	prob-cbd-res-pm		0.2
-set	prob-com-cbd-pm		0.2
-set	prob-com-com-pm		0.2
-set	prob-com-res-pm		0.2
-set	prob-res-cbd-pm		0.2
-set	prob-res-com-pm		0.2
-set	prob-res-res-pm		0.2
-; evening			
-set	prob-cbd-cbd-eve		0.1
-set	prob-cbd-com-eve		0.1
-set	prob-cbd-res-eve		0.1
-set	prob-com-cbd-eve		0.1
-set	prob-com-com-eve		0.1
-set	prob-com-res-eve		0.1
-set	prob-res-cbd-eve		0.1
-set	prob-res-com-eve		0.1
-set	prob-res-res-eve		0.1
-; early morning			
-set	prob-cbd-cbd-em		0.1
-set	prob-cbd-com-em		0.1
-set	prob-cbd-res-em		0.1
-set	prob-com-cbd-em		0.1
-set	prob-com-com-em		0.1
-set	prob-com-res-em		0.1
-set	prob-res-cbd-em		0.1
-set	prob-res-com-em		0.1
-set	prob-res-res-em		0.1
+        ; AM Peak 			
+        set	prob-cbd-cbd-am		0.2
+        set	prob-cbd-com-am		0.2
+        set	prob-cbd-res-am		0.2
+        set	prob-com-cbd-am		0.2
+        set	prob-com-com-am		0.2
+        set	prob-com-res-am		0.2
+        set	prob-res-cbd-am		0.2
+        set	prob-res-com-am		0.2
+        set	prob-res-res-am		0.2
+        ; Midday			
+        set	prob-cbd-cbd-md		0.2
+        set	prob-cbd-com-md		0.2
+        set	prob-cbd-res-md		0.2
+        set	prob-com-cbd-md		0.2
+        set	prob-com-com-md		0.2
+        set	prob-com-res-md		0.2
+        set	prob-res-cbd-md		0.2
+        set	prob-res-com-md		0.2
+        set	prob-res-res-md		0.2
+        ; PM Peak			
+        set	prob-cbd-cbd-pm		0.2
+        set	prob-cbd-com-pm		0.2
+        set	prob-cbd-res-pm		0.2
+        set	prob-com-cbd-pm		0.2
+        set	prob-com-com-pm		0.2
+        set	prob-com-res-pm		0.2
+        set	prob-res-cbd-pm		0.2
+        set	prob-res-com-pm		0.2
+        set	prob-res-res-pm		0.2
+        ; evening			
+        set	prob-cbd-cbd-eve		0.1
+        set	prob-cbd-com-eve		0.1
+        set	prob-cbd-res-eve		0.1
+        set	prob-com-cbd-eve		0.1
+        set	prob-com-com-eve		0.1
+        set	prob-com-res-eve		0.1
+        set	prob-res-cbd-eve		0.1
+        set	prob-res-com-eve		0.1
+        set	prob-res-res-eve		0.1
+        ; early morning			
+        set	prob-cbd-cbd-em		0.1
+        set	prob-cbd-com-em		0.1
+        set	prob-cbd-res-em		0.1
+        set	prob-com-cbd-em		0.1
+        set	prob-com-com-em		0.1
+        set	prob-com-res-em		0.1
+        set	prob-res-cbd-em		0.1
+        set	prob-res-com-em		0.1
+        set	prob-res-res-em		0.1
       ][
-         ifelse type-of-passenger-spawns = "super-bowl"[
-      ; AM Peak (commuting to work)
-set prob-cbd-cbd-am 1   ; CBD to CBD (within CBD)
-set prob-cbd-com-am 1   ; CBD to Commercial
-set prob-cbd-res-am 1   ; CBD to Residential
-set prob-com-cbd-am 1   ; Commercial to CBD
-set prob-com-com-am 1   ; Commercial to Commercial (within Commercial)
-set prob-com-res-am 1   ; Commercial to Residential
-set prob-res-cbd-am 1   ; Residential to CBD
-set prob-res-com-am 1   ; Residential to Commercial
-set prob-res-res-am 1   ; Residential to Residential (within Residential)
-; Midday
-set prob-cbd-cbd-md 1   ; CBD to CBD (within CBD)
-set prob-cbd-com-md 1   ; CBD to Commercial
-set prob-cbd-res-md 1   ; CBD to Residential
-set prob-com-cbd-md 1   ; Commercial to CBD
-set prob-com-com-md 1   ; Commercial to Commercial (within Commercial)
-set prob-com-res-md 1   ; Commercial to Residential
-set prob-res-cbd-md 1   ; Residential to CBD
-set prob-res-com-md 1   ; Residential to Commercial
-set prob-res-res-md 1   ; Residential to Residential (within Residential)
-; PM Peak (commuting back home)
-set prob-cbd-cbd-pm 1   ; CBD to CBD (within CBD)
-set prob-cbd-com-pm 1   ; CBD to Commercial
-set prob-cbd-res-pm 1   ; CBD to Residential
-set prob-com-cbd-pm 1   ; Commercial to CBD
-set prob-com-com-pm 1   ; Commercial to Commercial (within Commercial)
-set prob-com-res-pm 1   ; Commercial to Residential
-set prob-res-cbd-pm 1   ; Residential to CBD
-set prob-res-com-pm 1   ; Residential to Commercial
-set prob-res-res-pm 1   ; Residential to Residential (within Residential)
-; midday
-set prob-cbd-cbd-eve 1   ; CBD to CBD (within CBD)
-set prob-cbd-com-eve 1   ; CBD to Commercial
-set prob-cbd-res-eve 1   ; CBD to Residential
-set prob-com-cbd-eve 1   ; Commercial to CBD
-set prob-com-com-eve 1   ; Commercial to Commercial (within Commercial)
-set prob-com-res-eve 1   ; Commercial to Residential
-set prob-res-cbd-eve 1   ; Residential to CBD
-set prob-res-com-eve 1   ; Residential to Commercial
-set prob-res-res-eve 1   ; Residential to Residential (within Residential)
-; early morning
-set prob-cbd-cbd-em 1   ; CBD to CBD (within CBD)
-set prob-cbd-com-em 1   ; CBD to Commercial
-set prob-cbd-res-em 1   ; CBD to Residential
-set prob-com-cbd-em 1   ; Commercial to CBD
-set prob-com-com-em 1   ; Commercial to Commercial (within Commercial)
-set prob-com-res-em 1   ; Commercial to Residential
-set prob-res-cbd-em 1   ; Residential to CBD
-set prob-res-com-em 1   ; Residential to Commercial
-set prob-res-res-em 1   ; Residential to Residential (within Residential)
-      ][
+        ifelse type-of-passenger-spawns = "super-bowl"[
+          ; AM Peak (commuting to work)
+          set prob-cbd-cbd-am 1   ; CBD to CBD (within CBD)
+          set prob-cbd-com-am 1   ; CBD to Commercial
+          set prob-cbd-res-am 1   ; CBD to Residential
+          set prob-com-cbd-am 1   ; Commercial to CBD
+          set prob-com-com-am 1   ; Commercial to Commercial (within Commercial)
+          set prob-com-res-am 1   ; Commercial to Residential
+          set prob-res-cbd-am 1   ; Residential to CBD
+          set prob-res-com-am 1   ; Residential to Commercial
+          set prob-res-res-am 1   ; Residential to Residential (within Residential)
+                                  ; Midday
+          set prob-cbd-cbd-md 1   ; CBD to CBD (within CBD)
+          set prob-cbd-com-md 1   ; CBD to Commercial
+          set prob-cbd-res-md 1   ; CBD to Residential
+          set prob-com-cbd-md 1   ; Commercial to CBD
+          set prob-com-com-md 1   ; Commercial to Commercial (within Commercial)
+          set prob-com-res-md 1   ; Commercial to Residential
+          set prob-res-cbd-md 1   ; Residential to CBD
+          set prob-res-com-md 1   ; Residential to Commercial
+          set prob-res-res-md 1   ; Residential to Residential (within Residential)
+                                  ; PM Peak (commuting back home)
+          set prob-cbd-cbd-pm 1   ; CBD to CBD (within CBD)
+          set prob-cbd-com-pm 1   ; CBD to Commercial
+          set prob-cbd-res-pm 1   ; CBD to Residential
+          set prob-com-cbd-pm 1   ; Commercial to CBD
+          set prob-com-com-pm 1   ; Commercial to Commercial (within Commercial)
+          set prob-com-res-pm 1   ; Commercial to Residential
+          set prob-res-cbd-pm 1   ; Residential to CBD
+          set prob-res-com-pm 1   ; Residential to Commercial
+          set prob-res-res-pm 1   ; Residential to Residential (within Residential)
+                                  ; midday
+          set prob-cbd-cbd-eve 1   ; CBD to CBD (within CBD)
+          set prob-cbd-com-eve 1   ; CBD to Commercial
+          set prob-cbd-res-eve 1   ; CBD to Residential
+          set prob-com-cbd-eve 1   ; Commercial to CBD
+          set prob-com-com-eve 1   ; Commercial to Commercial (within Commercial)
+          set prob-com-res-eve 1   ; Commercial to Residential
+          set prob-res-cbd-eve 1   ; Residential to CBD
+          set prob-res-com-eve 1   ; Residential to Commercial
+          set prob-res-res-eve 1   ; Residential to Residential (within Residential)
+                                   ; early morning
+          set prob-cbd-cbd-em 1   ; CBD to CBD (within CBD)
+          set prob-cbd-com-em 1   ; CBD to Commercial
+          set prob-cbd-res-em 1   ; CBD to Residential
+          set prob-com-cbd-em 1   ; Commercial to CBD
+          set prob-com-com-em 1   ; Commercial to Commercial (within Commercial)
+          set prob-com-res-em 1   ; Commercial to Residential
+          set prob-res-cbd-em 1   ; Residential to CBD
+          set prob-res-com-em 1   ; Residential to Commercial
+          set prob-res-res-em 1   ; Residential to Residential (within Residential)
+        ][
           ifelse type-of-passenger-spawns = "no-spawns"[
-; AM Peak 			
-set	prob-cbd-cbd-am		0
-set	prob-cbd-com-am		0
-set	prob-cbd-res-am		0
-set	prob-com-cbd-am		0
-set	prob-com-com-am		0
-set	prob-com-res-am		0
-set	prob-res-cbd-am		0
-set	prob-res-com-am		0
-set	prob-res-res-am		0
-; Midday			
-set	prob-cbd-cbd-md		0
-set	prob-cbd-com-md		0
-set	prob-cbd-res-md		0
-set	prob-com-cbd-md		0
-set	prob-com-com-md		0
-set	prob-com-res-md		0
-set	prob-res-cbd-md		0
-set	prob-res-com-md		0
-set	prob-res-res-md		0
-; PM Peak			
-set	prob-cbd-cbd-pm		0
-set	prob-cbd-com-pm		0
-set	prob-cbd-res-pm		0
-set	prob-com-cbd-pm		0
-set	prob-com-com-pm		0
-set	prob-com-res-pm		0
-set	prob-res-cbd-pm		0
-set	prob-res-com-pm		0
-set	prob-res-res-pm		0
-; midday			
-set	prob-cbd-cbd-eve		0
-set	prob-cbd-com-eve		0
-set	prob-cbd-res-eve		0
-set	prob-com-cbd-eve		0
-set	prob-com-com-eve		0
-set	prob-com-res-eve		0
-set	prob-res-cbd-eve		0
-set	prob-res-com-eve		0
-set	prob-res-res-eve		0
-; early morning			
-set	prob-cbd-cbd-em		0
-set	prob-cbd-com-em		0
-set	prob-cbd-res-em		0
-set	prob-com-cbd-em		0
-set	prob-com-com-em		0
-set	prob-com-res-em		0
-set	prob-res-cbd-em		0
-set	prob-res-com-em		0
-set	prob-res-res-em		0
+            ; AM Peak 			
+            set	prob-cbd-cbd-am		0
+            set	prob-cbd-com-am		0
+            set	prob-cbd-res-am		0
+            set	prob-com-cbd-am		0
+            set	prob-com-com-am		0
+            set	prob-com-res-am		0
+            set	prob-res-cbd-am		0
+            set	prob-res-com-am		0
+            set	prob-res-res-am		0
+            ; Midday			
+            set	prob-cbd-cbd-md		0
+            set	prob-cbd-com-md		0
+            set	prob-cbd-res-md		0
+            set	prob-com-cbd-md		0
+            set	prob-com-com-md		0
+            set	prob-com-res-md		0
+            set	prob-res-cbd-md		0
+            set	prob-res-com-md		0
+            set	prob-res-res-md		0
+            ; PM Peak			
+            set	prob-cbd-cbd-pm		0
+            set	prob-cbd-com-pm		0
+            set	prob-cbd-res-pm		0
+            set	prob-com-cbd-pm		0
+            set	prob-com-com-pm		0
+            set	prob-com-res-pm		0
+            set	prob-res-cbd-pm		0
+            set	prob-res-com-pm		0
+            set	prob-res-res-pm		0
+            ; midday			
+            set	prob-cbd-cbd-eve		0
+            set	prob-cbd-com-eve		0
+            set	prob-cbd-res-eve		0
+            set	prob-com-cbd-eve		0
+            set	prob-com-com-eve		0
+            set	prob-com-res-eve		0
+            set	prob-res-cbd-eve		0
+            set	prob-res-com-eve		0
+            set	prob-res-res-eve		0
+            ; early morning			
+            set	prob-cbd-cbd-em		0
+            set	prob-cbd-com-em		0
+            set	prob-cbd-res-em		0
+            set	prob-com-cbd-em		0
+            set	prob-com-com-em		0
+            set	prob-com-res-em		0
+            set	prob-res-cbd-em		0
+            set	prob-res-com-em		0
+            set	prob-res-res-em		0
           ][]
         ]
       ]
@@ -828,7 +828,7 @@ end
 to change-traffic-light-color
   if row-green? [
     ask row-traffic-lights [
-    set pcolor green]
+      set pcolor green]
 
     ask col-traffic-lights [
       set pcolor red]
@@ -852,7 +852,7 @@ to start-traffic-light
 
   ; update patch variable of traffic lights of its color
   ask traffic-lights [
-   ifelse pcolor = green [
+    ifelse pcolor = green [
       set green-light-up? true
     ][
       set green-light-up? false
@@ -868,8 +868,8 @@ to report-current-phase
   ; so in case of the counter is exceeding 4
   ; set the counter back to 0
   if phase-counter > 4 [
-      set phase-counter 0
-    ]
+    set phase-counter 0
+  ]
   ; initial setting first phase is "AM Peak" and the counter is set to be 1
   ; so this will let the first phase go through the whole time period without
   ; jumping to the second phase at the very beginning
@@ -991,7 +991,7 @@ to stop-for-red-else-go
   ifelse (
     ; stop-condition: taxicab is at a traffic light patch and red light is up and patch ahead is an intersection
     is-traffic-light? and not green-light-up? and ([is-intersection?] of patch-ahead 1)
-  ) [
+    ) [
     stop
   ][
     ; in case there is another taxicabs waiting for red light ahead, stop behind
@@ -1058,7 +1058,7 @@ to pickup-passengers
   if vacancy? [
     ifelse any? passengers-here and any? in-link-neighbors  [
       ; identify a passenger to pickup
-      let target-passenger one-of in-link-neighbors  ;;"-here" is a method of turtles. It Reports an agentset containing all the turtles on the caller's patch (including the caller itself if it's a turtle).
+      let target-passenger one-of in-link-neighbors
       ; pick up passengers and taxicab is no longer vacant
       set vacancy? false
       ; color taxicabs to indicate occupancy
@@ -1067,8 +1067,8 @@ to pickup-passengers
       set num-passengers-onboard [num-passengers-waiting] of target-passenger
       ; tracking trip fare
       set current-trip-income first-passenger-cost +
-        (num-passengers-onboard - 1) *
-        each-additional-passenger-cost
+      (num-passengers-onboard - 1) *
+      each-additional-passenger-cost
       ; record ticks at the pickup moment
       set tick-at-pickup ticks
       ; record pickup coordinates
@@ -1091,27 +1091,27 @@ to pickup-passengers
     ]
     [
       ifelse color = blue[
-      change-direction-for-delivery]
+        change-direction-for-delivery]
       [ if (any? passengers with [color = 9.9] in-cone 5 20 ) or (any? passengers with [color = 9.9] in-radius 2 ) ;; see white passengers in a vision consists of a circle and a cone
         [
-            set color blue
-            let passengers-nearby-c (passengers in-cone 5 20)
-            let passengers-nearby-r (passengers in-radius 2)
-            let all-passengers-nearby (turtle-set passengers-nearby-c passengers-nearby-r)
-            let target-passenger one-of all-passengers-nearby with [color = 9.9]
-            ask target-passenger
-            [set color blue]
-             ; update destination coordinates
-            set d-xcor [xcor] of target-passenger
-            set d-ycor [ycor] of target-passenger
-            ; indicate pickup road is horizontal or vertical
-            set pickup-on-horizontal? (left? or right?)
-            set pickup-on-vertical? (up? or down?)
-             ; update destination coordinates
-            update-destination-coordinates
-            change-direction-for-delivery
-            create-link-with target-passenger
-        ]]
+          set color blue
+          let passengers-nearby-c (passengers in-cone 5 20)
+          let passengers-nearby-r (passengers in-radius 2)
+          let all-passengers-nearby (turtle-set passengers-nearby-c passengers-nearby-r)
+          let target-passenger one-of all-passengers-nearby with [color = 9.9]
+          ask target-passenger
+          [set color blue]
+          ; update destination coordinates
+          set d-xcor [xcor] of target-passenger
+          set d-ycor [ycor] of target-passenger
+          ; indicate pickup road is horizontal or vertical
+          set pickup-on-horizontal? (left? or right?)
+          set pickup-on-vertical? (up? or down?)
+          ; update destination coordinates
+          update-destination-coordinates
+          change-direction-for-delivery
+          create-link-with target-passenger
+      ]]
     ]
   ]
 end
@@ -1143,19 +1143,19 @@ to change-direction-for-delivery
   ; fix taxicab heading
   ; The current location is on top-right of destination
   (ifelse
-  ; The current location is straight above
+    ; The current location is straight above
     cur-same-x? and cur-at-top? [
       if heading-up? [make-u-turn]
     ]
-  ; The current location is straight below
+    ; The current location is straight below
     cur-same-x? and cur-at-bottom? [
       if heading-down? [make-u-turn]
     ]
-  ; The current location is straight right
+    ; The current location is straight right
     cur-same-y? and cur-on-right? [
       if heading-right? [make-u-turn]
     ]
-  ; The current location is straight left
+    ; The current location is straight left
     cur-same-y? and cur-on-left? [
       if heading-left? [make-u-turn]
     ]
@@ -1163,17 +1163,17 @@ to change-direction-for-delivery
       ; if the heading is not facing bottom or left, make a u-turn
       if (heading-up? or heading-right?) [make-u-turn]
     ]
-  ; The current location is on top left of destination
+    ; The current location is on top left of destination
     cur-at-top? and cur-on-left? [
       ; if the heading is not facing down or right, make a u-turn
       if (heading-up? or heading-left?) [make-u-turn]
     ]
-  ; The current location is on bottom-right of destination
+    ; The current location is on bottom-right of destination
     cur-at-bottom? and cur-on-right? [
       ; if the heading is not facing up or left, make a u-turn
       if (heading-down? or heading-right?) [make-u-turn]
     ]
-  ; The current location is on botton-left of destination
+    ; The current location is on botton-left of destination
     cur-at-bottom? and cur-on-left? [
       ; if the heading is not facing up or right, make a u-turn
       if (heading-down? or heading-left?) [make-u-turn]
@@ -1388,7 +1388,7 @@ to dropoff-passenger
   let destination-ycor2 [d-ycor2] of self
 
   if (current-xcor = destination-xcor1 or current-xcor = destination-xcor2) and
-     (current-ycor = destination-ycor1 or current-ycor = destination-ycor2)[
+  (current-ycor = destination-ycor1 or current-ycor = destination-ycor2)[
     ; update total income
     set total-income total-income + current-trip-income
     ; append current trip distance
